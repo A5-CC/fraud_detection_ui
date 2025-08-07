@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Interview</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+    video {
+      width: 640px;
+      height: 480px;
+      background-color: #000;
+      border-radius: 8px;
+      border: 2px solid #333;
+    }
+    .comments {
+      margin-top: 30px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      width: 640px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .comments h3 {
+      margin-top: 0;
+    }
+    .comments ul {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Live Interview Session</h2>
+  <video autoplay muted playsinline></video>
+
+  <div class="comments">
+    <h3>Real-time Observations</h3>
+    <ul>
+      <li>✅ Maintains eye contact with the camera</li>
+      <li>⚠️ Tone fluctuates under pressure questions</li>
+      <li>✅ Confident posture and clear voice</li>
+      <li>❗ Possible script reading — verify with follow-up</li>
+    </ul>
+  </div>
+
+  <script>
+    const video = document.querySelector("video");
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(error => {
+        console.error("Camera not accessible:", error);
+        video.outerHTML = "<p><strong>Camera access denied or unavailable.</strong></p>";
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Screening in Progress</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef1f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 80px;
+    }
+    .progress-container {
+      width: 60%;
+      margin-bottom: 40px;
+    }
+    .step {
+      margin-bottom: 10px;
+    }
+    .step span {
+      display: inline-block;
+      width: 200px;
+    }
+    .bar {
+      height: 10px;
+      background-color: #007bff;
+      animation: loading 2s ease-in-out infinite;
+    }
+    @keyframes loading {
+      0% { width: 0%; }
+      50% { width: 80%; }
+      100% { width: 0%; }
+    }
+    .metrics {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    .metrics img {
+      width: 600px;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .interview-link {
+      margin-top: 30px;
+      text-decoration: none;
+      font-size: 18px;
+      background: #28a745;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+    }
+    .interview-link:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <h2>Analyzing Candidate Information...</h2>
+  <div class="progress-container" id="progress">
+    <div class="step"><span>Checking LinkedIn...</span><div class="bar"></div></div>
+    <div class="step"><span>Running Background Check...</span><div class="bar"></div></div>
+    <div class="step"><span>Searching Internet Images...</span><div class="bar"></div></div>
+    <div class="step"><span>Matching Resume to Job...</span><div class="bar"></div></div>
+  </div>
+
+  <div class="metrics" id="metrics">
+    <h3>Candidate Screening Metrics</h3>
+    <img src="candidate_metrics.png" alt="Candidate Metrics">
+    <a href="interview.html" class="interview-link">Proceed to Interview</a>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById('progress').style.display = 'none';
+      document.getElementById('metrics').style.display = 'flex';
+    }, 5000); // simulate 5-second analysis
+  </script>
+</body>
+</html>
