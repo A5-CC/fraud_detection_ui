@@ -12,6 +12,7 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      margin: 0;
     }
     .container {
       background: white;
@@ -58,17 +59,8 @@
 
   <script>
     document.getElementById("resumeForm").addEventListener("submit", function(event) {
-      event.preventDefault(); // prevent actual form submission
-
-      const name = document.getElementById("name").value.trim();
-      const resume = document.getElementById("resume").files[0];
-
-      if (name && resume) {
-        // Simulate transition to analysis
-        window.location.href = "analysis.html";
-      } else {
-        alert("Please fill in your name and upload your resume.");
-      }
+      event.preventDefault(); // stop form from reloading page
+      window.location.href = "analysis.html"; // redirect immediately
     });
   </script>
 </body>
