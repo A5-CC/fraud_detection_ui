@@ -3,35 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <title>Live Interview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 100;
+      background: linear-gradient(to bottom, #f0f2f5, #d9dee4);
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 40px;
+      color: #222;
     }
+
+    h2 {
+      font-weight: 100;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
     video {
       width: 640px;
       height: 480px;
       background-color: #000;
-      border-radius: 8px;
-      border: 2px solid #333;
+      border-radius: 12px;
+      border: 2px solid #888;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     }
+
     .comments {
       margin-top: 30px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
+      background: white;
+      padding: 20px 25px;
+      border-radius: 12px;
       width: 640px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     }
+
     .comments h3 {
+      font-weight: 100;
+      font-size: 1.5rem;
       margin-top: 0;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+      color: #333;
     }
+
     .comments ul {
       padding-left: 20px;
+      margin: 0;
+    }
+
+    .comments li {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .status-icon {
+      margin-right: 6px;
     }
   </style>
 </head>
@@ -42,10 +73,10 @@
   <div class="comments">
     <h3>Real-time Observations</h3>
     <ul>
-      <li>✅ Maintains eye contact with the camera</li>
-      <li>⚠️ Tone fluctuates under pressure questions</li>
-      <li>✅ Confident posture and clear voice</li>
-      <li>❗ Possible script reading — verify with follow-up</li>
+      <li><span class="status-icon">✅</span>Maintains eye contact with the camera</li>
+      <li><span class="status-icon">⚠️</span>Tone fluctuates under pressure questions</li>
+      <li><span class="status-icon">✅</span>Confident posture and clear voice</li>
+      <li><span class="status-icon">❗</span>Possible script reading — verify with follow-up</li>
     </ul>
   </div>
 

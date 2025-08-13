@@ -3,43 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <title>Screening in Progress</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
   <style>
-    body { 
-      font-family: Arial, sans-serif;
-      background: #eef1f5;
+    body {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 100;
+      background: #f5f5f5;
+      color: #222;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding-top: 80px;
+      margin: 0;
+    }
+    h2, h3 {
+      font-weight: 100;
+      margin-bottom: 40px;
     }
     .progress-container {
       width: 60%;
-      margin-bottom: 40px;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
     .step {
-      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
-    .step span {
-      display: inline-block;
-      width: 200px;
+    .step-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
     }
     .bar {
-      height: 10px;
-      background-color: #007bff;
-      animation: loading 2s ease-in-out infinite;
+      height: 8px;
+      background-color: #ccc;
+      border-radius: 4px;
+      overflow: hidden;
     }
-    @keyframes loading {
-      0% { width: 0%; }
-      50% { width: 80%; }
-      100% { width: 0%; }
+    .bar-fill {
+      height: 100%;
+      background-color: #555;
+      width: 0%;
+      transition: width 2s linear;
     }
     .metrics {
       display: none;
       flex-direction: column;
       align-items: center;
+      margin-top: 40px;
     }
     .metrics img {
-      width: 600px;
+      width: 100%;
+      max-width: 600px;
       margin-top: 20px;
       border: 1px solid #ccc;
       border-radius: 8px;
@@ -47,24 +65,37 @@
     .interview-link {
       margin-top: 30px;
       text-decoration: none;
-      font-size: 18px;
-      background: #28a745;
+      font-size: 16px;
+      background: #000;
       color: white;
-      padding: 12px 24px;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-weight: 100;
     }
     .interview-link:hover {
-      background: #218838;
+      background: #333;
     }
   </style>
 </head>
 <body>
   <h2>Analyzing Candidate Information...</h2>
   <div class="progress-container" id="progress">
-    <div class="step"><span>Checking LinkedIn...</span><div class="bar"></div></div>
-    <div class="step"><span>Running Background Check...</span><div class="bar"></div></div>
-    <div class="step"><span>Searching Internet Images...</span><div class="bar"></div></div>
-    <div class="step"><span>Matching Resume to Job...</span><div class="bar"></div></div>
+    <div class="step">
+      <div class="step-label"><span>Checking LinkedIn...</span><span class="percent">0%</span></div>
+      <div class="bar"><div class="bar-fill"></div></div>
+    </div>
+    <div class="step">
+      <div class="step-label"><span>Running Background Check...</span><span class="percent">0%</span></div>
+      <div class="bar"><div class="bar-fill"></div></div>
+    </div>
+    <div class="step">
+      <div class="step-label"><span>Searching Internet Images...</span><span class="percent">0%</span></div>
+      <div class="bar"><div class="bar-fill"></div></div>
+    </div>
+    <div class="step">
+      <div class="step-label"><span>Matching Resume to Job...</span><span class="percent">0%</span></div>
+      <div class="bar"><div class="bar-fill"></div></div>
+    </div>
   </div>
 
   <div class="metrics" id="metrics">
@@ -74,10 +105,38 @@
   </div>
 
   <script>
-    setTimeout(() => {
-      document.getElementById('progress').style.display = 'none';
-      document.getElementById('metrics').style.display = 'flex';
-    }, 5000); // simulate 5-second analysis
+    const steps = document.querySelectorAll('.step');
+    let stepIndex = 0;
+
+    function fillStep(stepEl, callback) {
+      const fill = stepEl.querySelector('.bar-fill');
+      const percentLabel = stepEl.querySelector('.percent');
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress++;
+        fill.style.width = progress + '%';
+        percentLabel.textContent = progress + '%';
+        if (progress >= 100) {
+          clearInterval(interval);
+          if (callback) callback();
+        }
+      }, 20); // 20ms × 100 = 2 seconds total
+    }
+
+    function runSteps() {
+      if (stepIndex < steps.length) {
+        fillStep(steps[stepIndex], () => {
+          stepIndex++;
+          runSteps();
+        });
+      } else {
+        // Show metrics
+        document.getElementById('progress').style.display = 'none';
+        document.getElementById('metrics').style.display = 'flex';
+      }
+    }
+
+    runSteps();
   </script>
 </body>
 </html>

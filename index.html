@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Fraud Detection – Candidate Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f8f9fa;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 100;
+      background: #f5f5f5;
+      color: #222;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -15,31 +18,83 @@
       margin: 0;
     }
     .container {
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 400px;
+      background: #fff;
+      padding: 28px 32px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      width: 340px;
     }
-    input[type="text"], input[type="file"] {
+    h2 {
+      font-weight: 100;
+      font-size: 22px;
+      margin-bottom: 18px;
+      text-align: center;
+      color: #111;
+    }
+    label {
+      font-size: 12px;
+      font-weight: 100;
+      color: #444;
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+    input[type="text"] {
       width: 100%;
-      margin: 10px 0;
-      padding: 12px;
+      padding: 7px 9px;
+      font-size: 14px;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 4px;
+      background: #fafafa;
+      color: #111;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 100;
+    }
+    /* Hide native file input */
+    input[type="file"] {
+      display: none;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 100;
+    }
+    /* Custom file upload button */
+    .file-label {
+      display: inline-block;
+      padding: 7px 9px;
+      font-size: 14px;
+      font-weight: 100;
+      font-family: 'Roboto', sans-serif;
+      color: #111;
+      background: #fafafa;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+    }
+    .file-name {
+      font-size: 12px;
+      font-weight: 100;
+      font-family: 'Roboto', sans-serif;
+      color: #666;
+      margin-top: 4px;
+      word-break: break-all;
     }
     button {
       width: 100%;
-      padding: 12px;
-      background-color: #007bff;
+      padding: 9px;
+      margin-top: 16px;
+      background-color: #222;
       color: white;
       border: none;
-      border-radius: 6px;
-      font-size: 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 100;
+      font-family: 'Roboto', sans-serif;
       cursor: pointer;
+      transition: background 0.2s ease;
     }
     button:hover {
-      background-color: #0056b3;
+      background-color: #000;
     }
   </style>
 </head>
@@ -51,16 +106,23 @@
       <input type="text" id="name" name="name" placeholder="John Doe" required>
 
       <label for="resume">Upload Resume</label>
+      <label class="file-label" for="resume">Choose File</label>
       <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+      <div class="file-name" id="fileName">No file chosen</div>
 
       <button type="submit">Begin Screening</button>
     </form>
   </div>
 
   <script>
+    document.getElementById("resume").addEventListener("change", function() {
+      const fileName = this.files.length ? this.files[0].name : "No file chosen";
+      document.getElementById("fileName").textContent = fileName;
+    });
+
     document.getElementById("resumeForm").addEventListener("submit", function(event) {
-      event.preventDefault(); // stop form from reloading page
-      window.location.href = "analysis.html"; // redirect immediately
+      event.preventDefault();
+      window.location.href = "analysis.html";
     });
   </script>
 </body>
