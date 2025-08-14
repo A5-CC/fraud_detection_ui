@@ -1,95 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Live Interview</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      font-weight: 100;
-      background: linear-gradient(to bottom, #f0f2f5, #d9dee4);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px;
-      color: #222;
-    }
+<meta charset="UTF-8">
+<title>Interview Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 100;
+  background: #f0f2f5;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+h2 { font-weight: 100; margin-bottom: 20px; }
 
-    h2 {
-      font-weight: 100;
-      font-size: 2rem;
-      margin-bottom: 20px;
-      color: #333;
-    }
+.interview-container {
+  display: flex;
+  gap: 20px;
+  width: 1000px;
+  max-width: 100%;
+  height: 600px;
+}
 
-    video {
-      width: 640px;
-      height: 480px;
-      background-color: #000;
-      border-radius: 12px;
-      border: 2px solid #888;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
+/* Left panel: large candidate screen */
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    .comments {
-      margin-top: 30px;
-      background: white;
-      padding: 20px 25px;
-      border-radius: 12px;
-      width: 640px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    }
+.candidate-screen {
+  width: 100%;
+  height: 100%;
+  background-color: #ccc;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: #555;
+}
 
-    .comments h3 {
-      font-weight: 100;
-      font-size: 1.5rem;
-      margin-top: 0;
-      margin-bottom: 15px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 8px;
-      color: #333;
-    }
+/* Navigation buttons below */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
 
-    .comments ul {
-      padding-left: 20px;
-      margin: 0;
-    }
+.nav-buttons button {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 100; /* Roboto thin */
+  background-color: #9e9e9e;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.nav-buttons button:hover { background-color: #757575; }
 
-    .comments li {
-      font-size: 1rem;
-      margin-bottom: 8px;
-    }
 
-    .status-icon {
-      margin-right: 6px;
-    }
-  </style>
+/* Right panel: conversation & metrics */
+.right-panel {
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+}
+
+.conversation {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.bubble {
+  max-width: 90%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  position: relative;
+}
+.candidate-bubble { background: #e0e0e0; align-self: flex-start; }
+.ai-bubble { background: #f5f5f5; align-self: flex-end; }
+
+.metrics-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metric-label { font-size: 12px; font-weight: 100; margin-bottom: 2px; }
+.metric-bar { width: 100%; background: #ccc; border-radius: 4px; overflow: hidden; height: 10px; margin-bottom: 4px; }
+.metric-fill { height: 100%; width: 0%; transition: width 0.5s ease; background-color: #4caf50; }
+
+/* Final report panel */
+#final-report {
+  display: none;
+  margin-top: 20px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 1000px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+</style>
 </head>
 <body>
-  <h2>Live Interview Session</h2>
-  <video autoplay muted playsinline></video>
+<h2>AI-Assisted Interview Review</h2>
 
-  <div class="comments">
-    <h3>Real-time Observations</h3>
-    <ul>
-      <li><span class="status-icon">✅</span>Maintains eye contact with the camera</li>
-      <li><span class="status-icon">⚠️</span>Tone fluctuates under pressure questions</li>
-      <li><span class="status-icon">✅</span>Confident posture and clear voice</li>
-      <li><span class="status-icon">❗</span>Possible script reading — verify with follow-up</li>
-    </ul>
+<div class="interview-container" id="interview-panel">
+  <div class="left-panel">
+    <div class="candidate-screen" id="candidate-screen">Candidate</div>
+    <div class="nav-buttons">
+      <button onclick="prevQuestion()">⬅ Previous</button>
+      <button onclick="nextQuestion()">Next ➡</button>
+    </div>
   </div>
 
-  <script>
-    const video = document.querySelector("video");
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-      .then(stream => {
-        video.srcObject = stream;
-      })
-      .catch(error => {
-        console.error("Camera not accessible:", error);
-        video.outerHTML = "<p><strong>Camera access denied or unavailable.</strong></p>";
-      });
-  </script>
+  <div class="right-panel">
+    <div class="conversation" id="conversation"></div>
+    <div class="metrics-panel">
+      <div class="metric-label">Eye Tracking Compliance</div>
+      <div class="metric-bar"><div class="metric-fill" id="eye-fill"></div></div>
+      <div class="metric-label">Cheating Likelihood</div>
+      <div class="metric-bar"><div class="metric-fill" id="cheating-fill"></div></div>
+      <div class="metric-label">Response Quality</div>
+      <div class="metric-bar"><div class="metric-fill" id="score-fill"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Final report panel -->
+<div id="final-report">
+  <h3>Overall Interview Report</h3>
+  <p><strong>Average Cheating Likelihood:</strong> <span id="final-cheating"></span>%</p>
+  <p><strong>Average Eye Tracking Compliance:</strong> <span id="final-eye"></span>%</p>
+  <p><strong>Average Response Quality:</strong> <span id="final-score"></span>%</p>
+  <div class="nav-buttons" style="justify-content: flex-start; margin-top: 10px;">
+    <button onclick="prevFromReport()">⬅ Interview Responses</button>
+  </div>
+</div>
+
+
+<script>
+const questions = [
+  {
+    question: "Explain your approach to designing a large-scale NLP system for real-time applications.",
+    answer: "I would first clarify the problem scope and define success metrics. Next, I would design transformer-based architectures optimized for latency and memory, and use techniques like model distillation, quantization, and pruning for efficiency. I'd ensure robust monitoring pipelines to track drift, evaluate performance in production, and continuously retrain models. Collaboration with engineering and product teams ensures smooth deployment and practical usability, while compliance with data privacy and ethical guidelines is enforced.",
+    avatar: "url('avatar1.jpg')",
+    eye: 90,
+    cheating: 5,
+    score: 92
+  },
+  {
+    question: "How do you handle bias mitigation in multi-lingual conversational AI?",
+    answer: "I would analyze potential sources of bias in datasets, models, and deployment environments. Then I would implement fairness-aware training, augment underrepresented languages, and evaluate metrics per demographic group. A feedback loop with continuous monitoring ensures bias is minimized over time. I also incorporate explainable AI tools to help stakeholders understand model behavior, and retraining cycles are scheduled to address emerging biases proactively.",
+    avatar: "url('avatar2.jpg')",
+    eye: 85,
+    cheating: 7,
+    score: 95
+  },
+  {
+    question: "Describe how you would approach integrating real-time user feedback into a deployed AI system.",
+    answer: "I would design pipelines that collect and sanitize user feedback, ensuring privacy compliance. Then, feedback signals would be integrated into retraining workflows and online learning loops. I would prioritize feedback based on relevance and potential impact, implement automated validation, and monitor for model drift. Communication channels with the product team ensure actionable insights are used effectively, and dashboards track improvement metrics over time, providing transparency and iterative refinement.",
+    avatar: "url('avatar3.jpg')",
+    eye: 92,
+    cheating: 3,
+    score: 96
+  }
+];
+
+let currentIndex = 0;
+
+const conversationEl = document.getElementById('conversation');
+const candidateEl = document.getElementById('candidate-screen');
+const eyeEl = document.getElementById('eye-fill');
+const cheatEl = document.getElementById('cheating-fill');
+const scoreEl = document.getElementById('score-fill');
+const finalReportEl = document.getElementById('final-report');
+const finalCheat = document.getElementById('final-cheating');
+const finalEye = document.getElementById('final-eye');
+const finalScore = document.getElementById('final-score');
+const interviewPanel = document.getElementById('interview-panel');
+
+function renderQuestion(index) {
+  const q = questions[index];
+  conversationEl.innerHTML = `
+    <div class="ai-bubble">${q.question}</div>
+    <div class="candidate-bubble">${q.answer}</div>
+  `;
+  candidateEl.style.backgroundImage = q.avatar;
+  eyeEl.style.width = q.eye + "%";
+  cheatEl.style.width = q.cheating + "%";
+  scoreEl.style.width = q.score + "%";
+}
+
+function nextQuestion() {
+  if(currentIndex < questions.length - 1) {
+    currentIndex++;
+    renderQuestion(currentIndex);
+  } else {
+    showFinalReport();
+  }
+}
+
+function prevQuestion() {
+  if(finalReportEl.style.display === 'block') {
+    // if viewing final report, go back to last question
+    finalReportEl.style.display = 'none';
+    interviewPanel.style.display = 'flex';
+    renderQuestion(currentIndex);
+  } else if(currentIndex > 0) {
+    currentIndex--;
+    renderQuestion(currentIndex);
+  }
+}
+
+function showFinalReport() {
+  // Compute averages
+  const avgCheat = Math.round(questions.reduce((a,b)=>a+b.cheating,0)/questions.length);
+  const avgEye = Math.round(questions.reduce((a,b)=>a+b.eye,0)/questions.length);
+  const avgScore = Math.round(questions.reduce((a,b)=>a+b.score,0)/questions.length);
+
+  finalCheat.textContent = avgCheat;
+  finalEye.textContent = avgEye;
+  finalScore.textContent = avgScore;
+
+  interviewPanel.style.display = 'none';
+  finalReportEl.style.display = 'block';
+}
+
+function prevFromReport() {
+  finalReportEl.style.display = 'none';
+  interviewPanel.style.display = 'flex';
+  renderQuestion(currentIndex);
+}
+
+// Initialize first question
+renderQuestion(currentIndex);
+</script>
 </body>
 </html>

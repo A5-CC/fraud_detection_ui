@@ -18,7 +18,7 @@
     }
     h2, h3 {
       font-weight: 100;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
     .progress-container {
       width: 60%;
@@ -52,33 +52,54 @@
     .metrics {
       display: none;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       margin-top: 40px;
-    }
-    .metrics img {
-      width: 100%;
+      width: 60%;
       max-width: 600px;
-      margin-top: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      gap: 16px;
     }
-    .interview-link {
-      margin-top: 30px;
-      text-decoration: none;
-      font-size: 16px;
-      background: #000;
+    .metric {
+      padding: 12px;
+      border-radius: 6px;
+      width: 100%;
       color: white;
-      padding: 10px 20px;
-      border-radius: 4px;
+    }
+    .high { background-color: #4caf50; }
+    .medium { background-color: #ffb74d; } /* softer yellow */
+    .low { background-color: #f44336; }
+    .metric h4 {
+      margin: 0 0 6px 0;
+      font-weight: 100;
+      font-size: 16px;
+    }
+    .metric p {
+      margin: 0;
+      font-size: 14px;
       font-weight: 100;
     }
-    .interview-link:hover {
-      background: #333;
+    .continue-button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 100; /* Roboto thin */
+      font-family: 'Roboto', sans-serif;
+      border: none;
+      border-radius: 6px;
+      background-color: #9e9e9e; /* grey */
+      color: white;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s;
+    }
+    .continue-button:hover {
+      background-color: #757575; /* darker grey on hover */
     }
   </style>
 </head>
 <body>
   <h2>Analyzing Candidate Information...</h2>
+
   <div class="progress-container" id="progress">
     <div class="step">
       <div class="step-label"><span>Checking LinkedIn...</span><span class="percent">0%</span></div>
@@ -92,16 +113,71 @@
       <div class="step-label"><span>Searching Internet Images...</span><span class="percent">0%</span></div>
       <div class="bar"><div class="bar-fill"></div></div>
     </div>
-    <div class="step">
-      <div class="step-label"><span>Matching Resume to Job...</span><span class="percent">0%</span></div>
-      <div class="bar"><div class="bar-fill"></div></div>
-    </div>
   </div>
 
   <div class="metrics" id="metrics">
-    <h3>Candidate Screening Metrics</h3>
-    <img src="candidate_metrics.png" alt="Candidate Metrics">
-    <a href="interview.html" class="interview-link">Proceed to Interview</a>
+
+    <div class="metric high">
+      <h4>LinkedIn Profile – High</h4>
+      <ul>
+        <li>Account active: 8+ years based on earliest listed positions (Roche 2015)</li>
+        <li>Connections: 341</li>
+        <li>Followers: 385</li>
+        <li>Top skill endorsements: 11 (NLP, Machine Learning, Research)</li>
+        <li>Additional skill endorsements (count per skill): Python (4), PyTorch (2), AWS (2), Deep Learning (2), Statistics (6), R (6), LaTeX (4), other skills (1 each)</li>
+        <li>Average endorsements per skill: 2.3</li>
+        <li>Verified work history:
+          <ul>
+            <li>Google DeepMind: Sep 2023–Present (2 yrs)</li>
+            <li>Amazon Applied Scientist: Nov 2019–Jul 2023 (3 yrs 9 mos)</li>
+            <li>University of Oxford Postdoc: Nov 2017–Oct 2019 (2 yrs)</li>
+            <li>Roche Internship: Apr–Jun 2015 (3 mos)</li>
+          </ul>
+        </li>
+        <li>Profile URL: <a href="https://www.linkedin.com/in/yunlong-jiao/" target="_blank">linkedin.com/in/yunlong-jiao/</a></li>
+        <li>Languages: English (Full Professional), Chinese (Native/Bilingual)</li>
+      </ul>
+    </div>
+
+    <div class="metric medium">
+      <h4>Background Check – Medium</h4>
+      <ul>
+        <li>No criminal records identified in UK or France public databases</li>
+        <li>Employment verification:
+          <ul>
+            <li>Amazon: Nov 2019–Jul 2023 (verified via public company records)</li>
+            <li>University of Oxford: Nov 2017–Oct 2019 (verified via departmental confirmation)</li>
+          </ul>
+        </li>
+        <li>Education verification:
+          <ul>
+            <li>PhD, PSL Research University, 2013–2017: transcript obtained and verified</li>
+            <li>MSc, University of Paris-Saclay, 2012–2013: verification could not be completed</li>
+            <li>BSc, University of Science & Technology of China, 2008–2012: verification could not be completed</li>
+          </ul>
+        </li>
+        <li>Patents verified: 1 US patent application (Roche Diagnostics GmbH, 2019)</li>
+      </ul>
+    </div>
+
+    <div class="metric high">
+      <h4>Internet Presence & Publications – High</h4>
+      <ul>
+        <li>Total publications found: 7 (ICML 2015, 2016, 2018; ICLR 2022; Interspeech 2021; ICASSP 2021; IEEE TPAMI)</li>
+        <li>Conference publications: 6</li>
+        <li>Patents found online: 1 US Patent Application (2019)</li>
+        <li>Average papers per year (2015–2022): ~0.875</li>
+        <li>Co-authors per paper: 2–5</li>
+        <li>Online news or project mentions: 3 (Oxford, PSL, Amazon)</li>
+        <li>Image matches verified: 3 (LinkedIn, company pages, publication photos)</li>
+        <li>Publication links available where applicable</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div id="continue-container" style="display: none;">
+    <a href="interview.html" class="continue-button">Continue Interview</a>
   </div>
 
   <script>
@@ -120,7 +196,7 @@
           clearInterval(interval);
           if (callback) callback();
         }
-      }, 20); // 20ms × 100 = 2 seconds total
+      }, 20);
     }
 
     function runSteps() {
@@ -130,9 +206,9 @@
           runSteps();
         });
       } else {
-        // Show metrics
         document.getElementById('progress').style.display = 'none';
         document.getElementById('metrics').style.display = 'flex';
+        document.getElementById('continue-container').style.display = 'block'; // show button
       }
     }
 
