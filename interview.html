@@ -1,258 +1,425 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Interview Review</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Interview — Senior Machine Learning Scientist Position</title>
+
+<!-- Roboto with thicker weights for readability -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+
 <style>
-body {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 100;
-  background: #f0f2f5;
-  color: #222;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
-h2 { font-weight: 100; margin-bottom: 20px; }
+  :root{
+    --bg:#eef1f4;
+    --panel:#ffffffcc;
+    --muted:#6d7276;
+    --text:#111214;
+    --shadow: 0 8px 24px rgba(12,16,20,0.06);
+    --bar-bg:#e7e7e7;
+    --bar-fill:#6b6b6b; /* grayscale fill for bars */
+    --green:#2f8f2f;
+    --orange:#d67f00;
+    --red:#c1272d;
+    --btn:#9e9e9e;
+    --btn-hover:#7b7b7b;
+  }
 
-.interview-container {
-  display: flex;
-  gap: 20px;
-  width: 1000px;
-  max-width: 100%;
-  height: 600px;
-}
+  html,body{height:100%;margin:0;font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+  header{height:56px;background:#0f1112;color:white;padding:12px 20px;font-size:15px;font-weight:400;display:flex;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
 
-/* Left panel: large candidate screen */
-.left-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .stage { display:flex; gap:20px; padding:18px; max-width:1180px; margin:18px auto; width:calc(100% - 36px); }
+  .left { flex:1.1; display:flex; flex-direction:column; gap:12px; }
+  .right { flex:0.95; display:flex; flex-direction:column; gap:12px; }
 
-.candidate-screen {
-  width: 100%;
-  height: 100%;
-  background-color: #ccc;
-  border-radius: 12px;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  color: #555;
-}
+  /* Candidate screen */
+  .candidate-screen {
+    background: #cfcfcf;
+    border-radius:12px;
+    height:520px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background-size:cover;
+    background-position:center;
+    box-shadow:var(--shadow);
+    color:#555;
+    font-size:22px;
+    position:relative;
+    font-weight:400;
+  }
 
-/* Navigation buttons below */
-.nav-buttons {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 10px;
-}
+  /* Nav buttons under candidate */
+  .nav {
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .nav button{
+    background:var(--btn);
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:400;
+  }
+  .nav button:hover{ background:var(--btn-hover) }
 
-.nav-buttons button {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 100; /* Roboto thin */
-  background-color: #9e9e9e;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-.nav-buttons button:hover { background-color: #757575; }
+  /* Right top panel: question & evaluation */
+  .panel {
+    background:var(--panel);
+    border-radius:10px;
+    padding:14px;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(0,0,0,0.04);
+  }
 
+  .panel h3 { margin:0 0 8px 0; font-weight:400 }
+  .q-block { display:flex; gap:12px; align-items:flex-start }
+  .q-left { flex:1; }
+  .question { font-weight:400; color:var(--text); margin-bottom:8px; font-size:15px; }
+  .answer { background:#f3f3f3; padding:12px; border-radius:8px; color:#222; font-size:14px; line-height:1.45; font-weight:400; }
+  .detail-toggle { margin-top:8px; }
 
-/* Right panel: conversation & metrics */
-.right-panel {
-  flex: 0.8;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  height: 100%;
-}
+  /* Answer quality bar */
+  .bar-row{ margin-top:12px }
+  .bar-label{ font-size:13px; color:var(--muted); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center }
+  .bar { height:14px; background:var(--bar-bg); border-radius:10px; overflow:hidden; position:relative }
+  .bar-fill { height:100%; width:0%; background:var(--bar-fill); display:flex; align-items:center; justify-content:center; color:white; font-size:12px; border-radius:10px; transition:width .6s ease; font-weight:400 }
 
-.conversation {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 10px;
-}
+  /* Anti-fraud list */
+  .checks { display:flex; flex-direction:column; gap:8px }
+  .check-item { display:flex; align-items:center; gap:10px; padding:10px; border-radius:8px; background: #fafafa; border:1px solid rgba(0,0,0,0.03) }
+  .status-dot { width:12px; height:12px; border-radius:50%; display:inline-block; flex:0 0 12px; box-shadow:0 1px 3px rgba(0,0,0,0.06) }
+  .check-title { font-size:13px; color:var(--text); font-weight:400 }
+  .check-desc { font-size:12px; color:var(--muted); margin-left:22px }
 
-.bubble {
-  max-width: 90%;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-  position: relative;
-}
-.candidate-bubble { background: #e0e0e0; align-self: flex-start; }
-.ai-bubble { background: #f5f5f5; align-self: flex-end; }
+  /* small pop-up (bottom-left) */
+  .popup {
+    position:fixed;
+    left:18px;
+    bottom:18px;
+    background:white;
+    padding:12px 14px;
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.12);
+    border-left:6px solid var(--red);
+    font-size:13px;
+    display:none;
+    z-index:999;
+    font-weight:400;
+  }
+  .popup.orange { border-left-color:var(--orange) }
+  .popup.green { border-left-color:var(--green) }
 
-.metrics-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+  /* final report */
+  #final-report { display:none; max-width:1180px; margin:18px auto; background:var(--panel); padding:16px; border-radius:10px; box-shadow:var(--shadow) }
+  #final-report h3{margin-top:0;font-weight:400}
 
-.metric-label { font-size: 12px; font-weight: 100; margin-bottom: 2px; }
-.metric-bar { width: 100%; background: #ccc; border-radius: 4px; overflow: hidden; height: 10px; margin-bottom: 4px; }
-.metric-fill { height: 100%; width: 0%; transition: width 0.5s ease; background-color: #4caf50; }
-
-/* Final report panel */
-#final-report {
-  display: none;
-  margin-top: 20px;
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 1000px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
+  /* small helper */
+  .small-muted{font-size:12px;color:var(--muted); font-weight:400}
 </style>
 </head>
 <body>
-<h2>AI-Assisted Interview Review</h2>
+  <header>Interview - Senior Machine Learning Scientist Position</header>
 
-<div class="interview-container" id="interview-panel">
-  <div class="left-panel">
-    <div class="candidate-screen" id="candidate-screen">Candidate</div>
-    <div class="nav-buttons">
-      <button onclick="prevQuestion()">⬅ Previous</button>
-      <button onclick="nextQuestion()">Next ➡</button>
-    </div>
-  </div>
+  <main>
+    <section class="stage" id="stage">
+      <div class="left">
+        <div class="candidate-screen" id="candidateScreen">Candidate Video</div>
 
-  <div class="right-panel">
-    <div class="conversation" id="conversation"></div>
-    <div class="metrics-panel">
-      <div class="metric-label">Eye Tracking Compliance</div>
-      <div class="metric-bar"><div class="metric-fill" id="eye-fill"></div></div>
-      <div class="metric-label">Cheating Likelihood</div>
-      <div class="metric-bar"><div class="metric-fill" id="cheating-fill"></div></div>
-      <div class="metric-label">Response Quality</div>
-      <div class="metric-bar"><div class="metric-fill" id="score-fill"></div></div>
-    </div>
-  </div>
-</div>
+        <div class="nav">
+          <button id="prevBtn" onclick="prevStep()">⬅ Previous</button>
+          <button id="nextBtn" onclick="nextStep()">Next ➡</button>
+        </div>
+      </div>
 
-<!-- Final report panel -->
-<div id="final-report">
-  <h3>Overall Interview Report</h3>
-  <p><strong>Average Cheating Likelihood:</strong> <span id="final-cheating"></span>%</p>
-  <p><strong>Average Eye Tracking Compliance:</strong> <span id="final-eye"></span>%</p>
-  <p><strong>Average Response Quality:</strong> <span id="final-score"></span>%</p>
-  <div class="nav-buttons" style="justify-content: flex-start; margin-top: 10px;">
-    <button onclick="prevFromReport()">⬅ Interview Responses</button>
-  </div>
-</div>
+      <div class="right">
+        <!-- Top: Question + Answer + Evaluation -->
+        <div class="panel" id="qaPanel">
+          <h3>Customized Interview — Resume-Based Deep Dive</h3>
+          <div class="q-block">
+            <div class="q-left">
+              <div class="question" id="questionText">Question text...</div>
+              <div class="answer" id="answerText">Candidate answer...</div>
 
+              <div class="bar-row">
+                <div class="bar-label"><span>Answer Quality</span><span id="answerPct" class="small-muted"></span></div>
+                <div class="bar"><div id="answerBar" class="bar-fill"> </div></div>
+              </div>
+
+              <details class="detail-toggle">
+                <summary>Details</summary>
+                <div style="margin-top:8px;color:var(--text)" id="qaDetails">
+                  Evaluator notes and automated rationale appear here.
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom: Anti-fraud Protection -->
+        <div class="panel">
+          <h3>Anti-fraud Protection</h3>
+          <div class="small-muted" style="margin-bottom:8px">Realtime checks — colored status indicates severity.</div>
+
+          <div class="checks" id="checksList">
+            <!-- check items inserted dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final report -->
+    <section id="final-report">
+      <h3>Overall Interview Report</h3>
+      <p><strong>Average Cheating Likelihood:</strong> <span id="finalCheat">—</span>%</p>
+      <p><strong>Average Eye Tracking Compliance:</strong> <span id="finalEye">—</span>%</p>
+      <p><strong>Average Answer Quality:</strong> <span id="finalQuality">—</span>%</p>
+      <p class="small-muted">Red checks flagged: <span id="finalFlags">0</span>. Review recordings and evidence before final decisions.</p>
+      <div style="margin-top:12px">
+        <button onclick="backToResponses()" style="background:var(--btn);color:white;border:none;padding:8px 14px;border-radius:8px;cursor:pointer">⬅ Interview Responses</button>
+      </div>
+    </section>
+
+    <!-- popup -->
+    <div id="violationPopup" class="popup"></div>
+  </main>
 
 <script>
-const questions = [
+/* --- simulated interview dataset (candidate is cheating in many checks) --- */
+const steps = [
   {
-    question: "Explain your approach to designing a large-scale NLP system for real-time applications.",
-    answer: "I would first clarify the problem scope and define success metrics. Next, I would design transformer-based architectures optimized for latency and memory, and use techniques like model distillation, quantization, and pruning for efficiency. I'd ensure robust monitoring pipelines to track drift, evaluate performance in production, and continuously retrain models. Collaboration with engineering and product teams ensures smooth deployment and practical usability, while compliance with data privacy and ethical guidelines is enforced.",
+    id:1,
+    questionTitle: "Resume-Based Deep Dive — LangChain project",
+    question: "Can you walk me through your LangChain project at Amazon? What specific problem did it solve?",
+    answer: `I worked on a brief LangChain prototype to help route user queries to specialized microservices for product recommendation. The pipeline used a small retrieval component and a chain of prompts to refine candidate responses. It focused on improving intent classification and reducing latency by precomputing entity embeddings. We also added basic safety constraints for user inputs and some heuristics for policy filtering. The system was a prototype; I coordinated with engineers to get a small internal demo running, and we iteratively tuned prompt templates based on offline A/B tests.`,
     avatar: "url('avatar1.jpg')",
-    eye: 90,
-    cheating: 5,
-    score: 92
+    metrics: {
+      answerQuality: 62,
+      eyeCompliance: 70,
+      multiBody: true,
+      voiceDelay: false,
+      tabSwitch: true,
+      pluginsDetected: true,
+      networkAnomaly: true
+    },
+    details: "Candidate provides a plausible prototype-level description, but claims around productionization are vague. Evidence of rapid iteration exists; validate repos and commit history."
   },
   {
-    question: "How do you handle bias mitigation in multi-lingual conversational AI?",
-    answer: "I would analyze potential sources of bias in datasets, models, and deployment environments. Then I would implement fairness-aware training, augment underrepresented languages, and evaluate metrics per demographic group. A feedback loop with continuous monitoring ensures bias is minimized over time. I also incorporate explainable AI tools to help stakeholders understand model behavior, and retraining cycles are scheduled to address emerging biases proactively.",
+    id:2,
+    questionTitle: "Role-based Question — Fraud detection design",
+    question: "How would you design a fraud detection model for financial transactions?",
+    answer: `I'd start with a streaming feature pipeline: aggregate transactional features and session signals, combine with device fingerprinting and historical user behavior. Use a hybrid approach: a fast, lightweight rules + tree ensemble model for initial scoring, and a second-stage neural model for suspicious cases. Instrument heavy monitoring for false positives, and use human-in-the-loop for high-value decisions. For feedback, design secure labeling flows, and ensure models are explainable at decision time for regulators.`,
     avatar: "url('avatar2.jpg')",
-    eye: 85,
-    cheating: 7,
-    score: 95
+    metrics: {
+      answerQuality: 55,
+      eyeCompliance: 45,
+      multiBody: true,
+      voiceDelay: true,
+      tabSwitch: true,
+      pluginsDetected: true,
+      networkAnomaly: true
+    },
+    details: "Answer is general and acceptable but lacking system-level specifics (latency budgets, feature store design). Coupled with behavioral anomalies, raise verification."
   },
   {
-    question: "Describe how you would approach integrating real-time user feedback into a deployed AI system.",
-    answer: "I would design pipelines that collect and sanitize user feedback, ensuring privacy compliance. Then, feedback signals would be integrated into retraining workflows and online learning loops. I would prioritize feedback based on relevance and potential impact, implement automated validation, and monitor for model drift. Communication channels with the product team ensure actionable insights are used effectively, and dashboards track improvement metrics over time, providing transparency and iterative refinement.",
+    id:3,
+    questionTitle: "Behavioral — reproducibility",
+    question: "How do you ensure your code and experiments are reproducible and transparent?",
+    answer: `I use version-controlled pipelines (CI/CD), containerized experiments, and immutable data snapshots. Experiments are logged with parameters, seeds, and compute environment metadata; all notebooks are converted to runnable scripts and saved in tagged releases. For reproducibility, I store model artifacts with checksums and keep simple training recipes in a "runbook" for engineers to reproduce results.`,
     avatar: "url('avatar3.jpg')",
-    eye: 92,
-    cheating: 3,
-    score: 96
+    metrics: {
+      answerQuality: 88,
+      eyeCompliance: 92,
+      multiBody: false,
+      voiceDelay: false,
+      tabSwitch: false,
+      pluginsDetected: false,
+      networkAnomaly: false
+    },
+    details: "Strong operational practices described. This answer suggests legitimate engineering discipline."
+  },
+  {
+    id:4,
+    questionTitle: "Quick probe — recent role scope",
+    question: "In your last role (3 months), what was the project scope, and why did you leave so quickly?",
+    answer: `The short role involved integrating a third-party speech module into a voice assistant prototype. I focused on model adaptation and integration testing. The engagement was a fixed-term contract that ended when the prototype milestone completed; I am now pursuing full-time opportunities where I can take ownership of larger product areas.`,
+    avatar: "url('avatar4.jpg')",
+    metrics: {
+      answerQuality: 58,
+      eyeCompliance: 75,
+      multiBody: true,
+      voiceDelay: false,
+      tabSwitch: true,
+      pluginsDetected: true,
+      networkAnomaly: true
+    },
+    details: "Short-tenure explained as contract work — validate employment docs. Multiple fraud signals persist across steps."
   }
 ];
 
-let currentIndex = 0;
+let idx = 0;
+const candidateScreen = document.getElementById('candidateScreen');
+const questionText = document.getElementById('questionText');
+const answerText = document.getElementById('answerText');
+const answerBar = document.getElementById('answerBar');
+const answerPct = document.getElementById('answerPct');
+const qaDetails = document.getElementById('qaDetails');
+const checksList = document.getElementById('checksList');
+const popup = document.getElementById('violationPopup');
+const finalReport = document.getElementById('final-report');
+const stage = document.getElementById('stage');
 
-const conversationEl = document.getElementById('conversation');
-const candidateEl = document.getElementById('candidate-screen');
-const eyeEl = document.getElementById('eye-fill');
-const cheatEl = document.getElementById('cheating-fill');
-const scoreEl = document.getElementById('score-fill');
-const finalReportEl = document.getElementById('final-report');
-const finalCheat = document.getElementById('final-cheating');
-const finalEye = document.getElementById('final-eye');
-const finalScore = document.getElementById('final-score');
-const interviewPanel = document.getElementById('interview-panel');
+function renderStep(i){
+  const s = steps[i];
+  // update candidate screen (avatar image)
+  candidateScreen.style.backgroundImage = s.avatar;
+  candidateScreen.textContent = ""; // remove text when image present
 
-function renderQuestion(index) {
-  const q = questions[index];
-  conversationEl.innerHTML = `
-    <div class="ai-bubble">${q.question}</div>
-    <div class="candidate-bubble">${q.answer}</div>
-  `;
-  candidateEl.style.backgroundImage = q.avatar;
-  eyeEl.style.width = q.eye + "%";
-  cheatEl.style.width = q.cheating + "%";
-  scoreEl.style.width = q.score + "%";
+  // update QA
+  questionText.textContent = s.questionTitle + " — " + s.question;
+  answerText.textContent = s.answer;
+  animateBar(answerBar, s.metrics.answerQuality);
+  answerPct.textContent = s.metrics.answerQuality + '%';
+  qaDetails.textContent = s.details;
+
+  // anti-fraud checks - create list
+  const checks = [
+    { key:'Eye movement', val: s.metrics.eyeCompliance, type:'percent', threshold:50,
+      desc: `Candidate looked at the screen ${s.metrics.eyeCompliance}% of the time.` },
+    { key:'Multi-body detected', val: s.metrics.multiBody, type:'boolean',
+      desc: s.metrics.multiBody ? 'Multiple people detected in frame.' : 'Single person detected.' },
+    { key:'Voice delay', val: s.metrics.voiceDelay, type:'boolean',
+      desc: s.metrics.voiceDelay ? 'Long pauses detected between Q&A.' : 'No excessive pauses.' },
+    { key:'Tab switching', val: s.metrics.tabSwitch, type:'boolean',
+      desc: s.metrics.tabSwitch ? 'Tab / window switching observed during interview.' : 'No tab switching detected.' },
+    { key:'Plugins/VMs', val: s.metrics.pluginsDetected, type:'boolean',
+      desc: s.metrics.pluginsDetected ? 'Suspicious browser plugins / VM indicators present.' : 'No suspicious plugins detected.' },
+    { key:'Network pattern', val: s.metrics.networkAnomaly, type:'boolean',
+      desc: s.metrics.networkAnomaly ? 'Unusual outbound traffic spikes detected.' : 'Network behavior normal.' }
+  ];
+
+  // render checks
+  checksList.innerHTML = '';
+  let anyRed = false;
+  let anyOrange = false;
+  checks.forEach(c=>{
+    const item = document.createElement('div');
+    item.className = 'check-item';
+    // decide status color
+    let statusColor = '#bbb';
+    let statusText = '';
+    if(c.type === 'percent'){
+      if(c.val >= 70) { statusColor = 'var(--green)'; statusText = `${c.val}% (OK)`; }
+      else if(c.val >= 50) { statusColor = 'var(--orange)'; statusText = `${c.val}% (Below preferred)`; anyOrange = true; }
+      else { statusColor = 'var(--red)'; statusText = `${c.val}% (Violation)`; anyRed = true; }
+    } else {
+      if(c.val === true){
+        statusColor = (c.key === 'Voice delay') ? 'var(--orange)' : 'var(--red)';
+        statusText = c.key === 'Voice delay' ? 'Triggered (check pauses)' : 'Triggered';
+        if(statusColor === 'var(--red)') anyRed = true; else anyOrange = true;
+      } else {
+        statusColor = 'var(--green)';
+        statusText = 'OK';
+      }
+    }
+    const dot = `<span class="status-dot" style="background:${statusColor}"></span>`;
+    item.innerHTML = `<div style="display:flex;align-items:center;"><div style="width:160px"><div class="check-title">${dot} ${c.key}</div></div><div style="flex:1"><div class="small-muted" style="margin-left:6px">${statusText}</div></div></div><div class="check-desc">${c.desc}</div>`;
+    checksList.appendChild(item);
+  });
+
+  // show popup if any red; severity message:
+  if(anyRed){
+    showPopup("Severe anti-fraud violation detected. Review flagged evidence (multi-body / tab switching / network anomaly).", 'red');
+  } else if(anyOrange){
+    showPopup("Potential issues observed (eye compliance or voice delay). Review recommended.", 'orange');
+  } else {
+    hidePopup();
+  }
 }
 
-function nextQuestion() {
-  if(currentIndex < questions.length - 1) {
-    currentIndex++;
-    renderQuestion(currentIndex);
+function animateBar(el, pct){
+  // reset then animate
+  el.style.width = '0%';
+  el.style.background = 'var(--bar-fill)';
+  setTimeout(()=> el.style.width = pct + '%', 60);
+}
+
+/* navigation */
+function nextStep(){
+  if(idx < steps.length - 1){
+    idx++;
+    renderStep(idx);
   } else {
+    // show final report
     showFinalReport();
   }
 }
-
-function prevQuestion() {
-  if(finalReportEl.style.display === 'block') {
-    // if viewing final report, go back to last question
-    finalReportEl.style.display = 'none';
-    interviewPanel.style.display = 'flex';
-    renderQuestion(currentIndex);
-  } else if(currentIndex > 0) {
-    currentIndex--;
-    renderQuestion(currentIndex);
+function prevStep(){
+  if(finalReport.style.display === 'block'){
+    // if on final report, go back to last response view
+    backToResponses();
+  } else if(idx > 0){
+    idx--;
+    renderStep(idx);
   }
 }
 
-function showFinalReport() {
-  // Compute averages
-  const avgCheat = Math.round(questions.reduce((a,b)=>a+b.cheating,0)/questions.length);
-  const avgEye = Math.round(questions.reduce((a,b)=>a+b.eye,0)/questions.length);
-  const avgScore = Math.round(questions.reduce((a,b)=>a+b.score,0)/questions.length);
+/* popup */
+let popupTimer = null;
+function showPopup(message, severity){
+  popup.className = 'popup';
+  popup.textContent = message;
+  if(severity === 'red') { popup.style.display = 'block'; popup.style.borderLeftColor = 'var(--red)'; }
+  else if(severity === 'orange') { popup.style.display = 'block'; popup.style.borderLeftColor = 'var(--orange)'; }
+  else { popup.style.display = 'block'; popup.style.borderLeftColor = 'var(--green)'; }
 
-  finalCheat.textContent = avgCheat;
-  finalEye.textContent = avgEye;
-  finalScore.textContent = avgScore;
+  // auto-hide after 6 seconds
+  if(popupTimer) clearTimeout(popupTimer);
+  popupTimer = setTimeout(()=> { popup.style.display = 'none'; }, 6000);
+}
+function hidePopup(){ popup.style.display = 'none'; if(popupTimer) clearTimeout(popupTimer); }
 
-  interviewPanel.style.display = 'none';
-  finalReportEl.style.display = 'block';
+/* final report */
+function showFinalReport(){
+  // compute averages and flags
+  const avgCheat = Math.round(steps.reduce((s,st)=> s + (st.metrics.tabSwitch || st.metrics.pluginsDetected || st.metrics.networkAnomaly ? 1 : 0), 0) / steps.length * 100);
+  const avgEye = Math.round(steps.reduce((s,st)=> s + st.metrics.eyeCompliance, 0) / steps.length);
+  const avgQuality = Math.round(steps.reduce((s,st)=> s + st.metrics.answerQuality, 0) / steps.length);
+
+  // count red flags across all steps (multi-body, tabSwitch, networkAnomaly, pluginsDetected, eye <50, voiceDelay true)
+  let redCount = 0;
+  steps.forEach(s=>{
+    if(s.metrics.eyeCompliance < 50) redCount++;
+    if(s.metrics.multiBody) redCount++;
+    if(s.metrics.tabSwitch) redCount++;
+    if(s.metrics.networkAnomaly) redCount++;
+    if(s.metrics.pluginsDetected) redCount++;
+    if(s.metrics.voiceDelay) redCount++;
+  });
+
+  document.getElementById('finalCheat').textContent = avgCheat;
+  document.getElementById('finalEye').textContent = avgEye;
+  document.getElementById('finalQuality').textContent = avgQuality;
+  document.getElementById('finalFlags').textContent = redCount;
+
+  // hide stage, show final-report
+  document.getElementById('stage').style.display = 'none';
+  document.getElementById('final-report').style.display = 'block';
+  hidePopup();
 }
 
-function prevFromReport() {
-  finalReportEl.style.display = 'none';
-  interviewPanel.style.display = 'flex';
-  renderQuestion(currentIndex);
+/* back */
+function backToResponses(){
+  document.getElementById('final-report').style.display = 'none';
+  document.getElementById('stage').style.display = 'flex';
+  renderStep(idx);
 }
 
-// Initialize first question
-renderQuestion(currentIndex);
+/* initialize */
+renderStep(idx);
+
 </script>
 </body>
 </html>
