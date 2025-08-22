@@ -120,7 +120,7 @@
       <!-- Qualification -->
       <div class="panel" id="qualPanel">
         <h3>Qualification Assessment</h3>
-        <div class="subtle">Compatibility is the candidate's fit for this role (skills + relevancy). Identity checks are separate.</div>
+        <div class="subtle">Compatibility is the candidate's fit for this role (skills + relevancy). Identity checks are separate but affect the overall match.</div>
 
         <div class="bar-row">
           <div class="bar-label"><span>Compatibility Score</span></div>
@@ -418,8 +418,24 @@
     }
   ];
 
-  // ensure sorted by compatibility descending
-  candidates.sort((a,b)=>b.compatibility - a.compatibility);
+  // compute an overall match score for each candidate using the right-panel metrics:
+  // weights: compatibility 40%, linkedin 20%, public records 20%, peer 10%, position 10%
+  function computeOverall(c){
+    const w = {compat:0.4, ln:0.2, pr:0.2, peer:0.1, pos:0.1};
+    const score =
+      ( (c.compatibility || 0) * w.compat ) +
+      ( (c.linkedinScore || 0) * w.ln ) +
+      ( (c.publicScore || 0) * w.pr ) +
+      ( (c.peer || 0) * w.peer ) +
+      ( (c.position || 0) * w.pos );
+    return Math.round(score);
+  }
+
+  // attach overallMatch to each candidate
+  candidates.forEach(c => c.overallMatch = computeOverall(c));
+
+  // sort by overallMatch descending
+  candidates.sort((a,b)=>b.overallMatch - a.overallMatch);
 
   const leftPanel = document.getElementById('leftPanel');
 
@@ -429,13 +445,13 @@
       const item = document.createElement('div');
       item.className = 'candidate-item';
       item.dataset.index = idx;
-      const compatClass = c.compatibility >= 80 ? 'compat-high' : (c.compatibility >= 65 ? 'compat-mid' : 'compat-low');
+      const compatClass = c.overallMatch >= 80 ? 'compat-high' : (c.overallMatch >= 65 ? 'compat-mid' : 'compat-low');
       item.innerHTML = `
         <div class="candidate-avatar" style="background-image:url('${c.photo}')"></div>
         <div class="candidate-meta">
           <div style="display:flex;align-items:center;gap:8px"><div class="candidate-name">${c.name}</div></div>
           <div class="candidate-title">${c.title} • ${c.location}</div>
-          <div class="compatibility-only ${compatClass}">Compatibility — ${c.compatibility}%</div>
+          <div class="compatibility-only ${compatClass}">Overall Match — ${c.overallMatch}%</div>
         </div>
       `;
       item.addEventListener('click', ()=> selectCandidate(idx));
@@ -503,6 +519,14 @@
     // strengths (3) and gaps (3) — both are objects {k,d}
     document.getElementById('strengthsList').innerHTML = (c.strengths || []).slice(0,3).map(s=>`<li><strong>${s.k}</strong>: ${s.d}</li>`).join('');
     document.getElementById('gapsList').innerHTML = (c.gaps || []).slice(0,3).map(g=>`<li><strong>${g.k}</strong>: ${g.d}</li>`).join('');
+
+    // update the left panel item's displayed overall (in case something changed)
+    const leftItems = document.querySelectorAll('.candidate-item');
+    if(leftItems[i]){
+      leftItems[i].querySelector('.compatibility-only').textContent = `Overall Match — ${c.overallMatch}%`;
+      // update color class
+      leftItems[i].querySelector('.compatibility-only').className = 'compatibility-only ' + (c.overallMatch >= 80 ? 'compat-high' : (c.overallMatch >= 65 ? 'compat-mid' : 'compat-low'));
+    }
   }
 
   function generateSimilarityComment(past, title){
